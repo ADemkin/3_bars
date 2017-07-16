@@ -1,4 +1,4 @@
-# -*- coding: Windows-1251 -*-
+# coding: utf-8
 #
 # This scrips parses json file with data for bars in Moscow.
 # It finds biggest, smallest and closest bar in a given coordinates.
@@ -12,17 +12,20 @@ import json
 import math
 import pprint
 
+import codecs
+
 file_json = 'moscow_pubs.json'
 
 
 def load_data(data):
-    # use encoding cp1252
-    with open(data, encoding='Windows-1251') as file:
-        return json.load(file)
+    '''reencodes data from cp1251 to utf-8 and load as json'''
+    with open(file_json, encoding='cp1251') as data:
+        string = data.read()
+        encoded_string = codecs.encode(string, 'utf-8')
+        return json.loads(encoded_string)
 
 
 def get_biggest_bar(data):
-    # SeatsCount
     current_max_seats = 0
     biggest_bar = None
     for bar in data:
@@ -33,7 +36,6 @@ def get_biggest_bar(data):
 
 
 def get_smallest_bar(data):
-    # SeatsCount
     current_min_seats = 999
     smallest_bar = None
     for bar in data:
@@ -44,6 +46,7 @@ def get_smallest_bar(data):
 
 
 def get_vector_length(x1, y1, x2, y2):
+    '''Calculate distance between two coordinates'''
     x = abs(float(x1) - float(x2))
     y = abs(float(y1) - float(y2))
     length = math.sqrt(x ** 2 + y ** 2)
@@ -52,36 +55,37 @@ def get_vector_length(x1, y1, x2, y2):
 
 def get_closest_bar(data, user_coordinates_x, user_coordinates_y):
     closest_bar = None
-    current_min_distance = 10000
+    best_min_distance = 10000
     for bar in data:
         bar_x = bar['Latitude_WGS84']
         bar_y = bar['Longitude_WGS84']
-        if get_vector_length(bar_x, bar_y, user_coordinates_x, user_coordinates_y) < current_min_distance:
-            current_min_distance = get_vector_length(bar_x, bar_y, user_coordinates_x, user_coordinates_y)
+        if get_vector_length(bar_x, bar_y, user_coordinates_x, user_coordinates_y) < best_min_distance:
+            best_min_distance = get_vector_length(bar_x, bar_y, user_coordinates_x, user_coordinates_y)
             closest_bar = bar
     return closest_bar
 
 
 def main():
+    # load data
     json_bar_data = load_data(file_json)
     # print(pprint.pprint(json_bar_data, indent=4))
     
     # find biggest bar
     biggest_bar = get_biggest_bar(json_bar_data)
-    print("Ñàìûé áîëüøîé áàð íàçûâàåòñÿ '%s'. Îí ðàññ÷èòàí íà %s ìåñò è ðàñïîëîæåí ïî àäðåñó: %s." %
+    print("Ð¡Ð°Ð¼Ñ‹Ð¹ Ð±Ð¾Ð»ÑŒÑˆÐ¾Ð¹ Ð±Ð°Ñ€ Ð½Ð°Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ '%s'. ÐžÐ½ Ñ€Ð°ÑÑÑ‡Ð¸Ñ‚Ð°Ð½ Ð½Ð° %s Ð¼ÐµÑÑ‚ Ð¸ Ñ€Ð°ÑÐ¿Ð¾Ð»Ð¾Ð¶ÐµÐ½ Ð¿Ð¾ Ð°Ð´Ñ€ÐµÑÑƒ: %s." %
           (biggest_bar['Name'], biggest_bar['SeatsCount'], biggest_bar['Address']))
     
     # find smallest bar
     smallest_bar = get_smallest_bar(json_bar_data)
-    print("Ñàìûé ìàëåíüêèé áàð íàçûâàåòñÿ '%s'. Îí ðàññ÷èòàí íà %s ìåñò è ðàñïîëîæåí ïî àäðåñó: %s." %
+    print("Ð¡Ð°Ð¼Ñ‹Ð¹ Ð¼Ð°Ð»ÐµÐ½ÑŒÐºÐ¸Ð¹ Ð±Ð°Ñ€ Ð½Ð°Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ '%s'. ÐžÐ½ Ñ€Ð°ÑÑÑ‡Ð¸Ñ‚Ð°Ð½ Ð½Ð° %s Ð¼ÐµÑÑ‚ Ð¸ Ñ€Ð°ÑÐ¿Ð¾Ð»Ð¾Ð¶ÐµÐ½ Ð¿Ð¾ Ð°Ð´Ñ€ÐµÑÑƒ: %s." %
           (smallest_bar['Name'], smallest_bar['SeatsCount'], smallest_bar['Address']))
     
     # find closest bar
-    raw_coordinates = input("Ââåäèòå âàøè êîîðäèíàòû (ñêîïèðóéòå êîîðäèíàòû èç ÿíäåêñ.êàðò â ôîðìàòå 11.111111, "
+    raw_coordinates = input("Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð²Ð°ÑˆÐ¸ ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ (ÑÐºÐ¾Ð¿Ð¸Ñ€ÑƒÐ¹Ñ‚Ðµ ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð¸Ð· ÑÐ½Ð´ÐµÐºÑ.ÐºÐ°Ñ€Ñ‚ Ð² Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ðµ 11.111111, "
                             "22.222222)\n", )
     coordinates = raw_coordinates.split(',')
     closest_bar = get_closest_bar(json_bar_data, coordinates[0], coordinates[1])
-    print("Ñàìûé áëèçêèé áàð íàçûâàåòñÿ '%s'. Îí ðàññ÷èòàí íà %s ìåñò è ðàñïîëîæåí ïî àäðåñó: %s." %
+    print("Ð¡Ð°Ð¼Ñ‹Ð¹ Ð±Ð»Ð¸Ð·ÐºÐ¸Ð¹ Ð±Ð°Ñ€ Ð½Ð°Ð·Ñ‹Ð²Ð°ÐµÑ‚ÑÑ '%s'. ÐžÐ½ Ñ€Ð°ÑÑÑ‡Ð¸Ñ‚Ð°Ð½ Ð½Ð° %s Ð¼ÐµÑÑ‚ Ð¸ Ñ€Ð°ÑÐ¿Ð¾Ð»Ð¾Ð¶ÐµÐ½ Ð¿Ð¾ Ð°Ð´Ñ€ÐµÑÑƒ: %s." %
           (closest_bar['Name'], closest_bar['SeatsCount'], closest_bar['Address']))
 
 
