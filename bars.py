@@ -1,4 +1,3 @@
-# coding: utf-8
 #
 # This scrips parses json file with data for bars in Moscow.
 # It finds biggest, smallest and closest bar in a given coordinates.
