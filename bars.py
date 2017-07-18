@@ -21,24 +21,10 @@ def load_data(file):
 
 
 def get_biggest_bar(data):
-    # current_max_seats = 0
-    # biggest_bar = None
-    # for bar in data:
-    #     if bar['SeatsCount'] > current_max_seats:
-    #         current_max_seats = bar['SeatsCount']
-    #         biggest_bar = bar
-    # return biggest_bar
     return max((bar['SeatsCount'], bar['Name'], bar['Address']) for bar in data)
 
 
 def get_smallest_bar(data):
-    # current_min_seats = 999
-    # smallest_bar = None
-    # for bar in data:
-    #     if bar['SeatsCount'] < current_min_seats:
-    #         current_min_seats = bar['SeatsCount']
-    #         smallest_bar = bar
-    # return smallest_bar
     return min((bar['SeatsCount'], bar['Name'], bar['Address']) for bar in data)
 
 
