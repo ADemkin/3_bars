@@ -63,7 +63,7 @@ def main():
     print_bar_info('маленький', smallest_bar[1], smallest_bar[0], smallest_bar[2])
     
     raw_coordinates = input("Введите координаты (скопируйте координаты из яндекс.карт в формате 11.111111, "
-                            "22.222222)\n", )
+                            "22.222222):\n", )
     coordinates = raw_coordinates.split(',')
     closest_bar = get_closest_bar(json_bar_data, coordinates[0], coordinates[1])
     print_bar_info('близкий', closest_bar['Name'], closest_bar['SeatsCount'], closest_bar['Address'])
