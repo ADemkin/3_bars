@@ -31,9 +31,9 @@ def get_closest_bar(bar_data, user_coordinate):
                                                                            bar['Longitude_WGS84']))
 
 
-def print_bar_info(bar_size_string, bar):
+def print_bar_info(bar_size_string, bar_data):
     print("Самый %s бар называется '%s'. Он рассчитан на %s мест и расположен по адресу: %s." %
-          (bar_size_string, bar['Name'], bar['SeatsCount'], bar['Address']))
+          (bar_size_string, bar_data['Name'], bar_data['SeatsCount'], bar_data['Address']))
 
 
 def main():
