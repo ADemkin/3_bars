@@ -10,12 +10,12 @@ def load_data(file):
         return json.loads(encoded_string)
 
 
-def get_biggest_bar(json_data):
-    return max([bar for bar in json_data], key=lambda bar:bar["SeatsCount"])
+def get_biggest_bar(bar_json_data):
+    return max([bar for bar in bar_json_data], key=lambda bar:bar["SeatsCount"])
 
 
-def get_smallest_bar(json_data):
-    return min([bar for bar in json_data], key=lambda bar:bar["SeatsCount"])
+def get_smallest_bar(bar_json_data):
+    return min([bar for bar in bar_json_data], key=lambda bar:bar["SeatsCount"])
 
 
 def get_vector_length(x1, y1, x2, y2):
@@ -25,14 +25,17 @@ def get_vector_length(x1, y1, x2, y2):
     return length
 
 
-def get_closest_bar(json_data, user_coordinate_x, user_coordinate_y):
-    return min([bar for bar in json_data], key=lambda bar:get_vector_length(user_coordinate_x,
-                                                                       user_coordinate_y,
+def get_closest_bar(bar_json_data, user_coordinate):
+    return min([bar for bar in bar_json_data], key=lambda bar:get_vector_length(user_coordinate[0],
+                                                                       user_coordinate[1],
                                                                        bar['Latitude_WGS84'],
                                                                        bar['Longitude_WGS84']))
 
 
-def print_bar_info(bar_size_string, bar_name, seats_count, address):
+def print_bar_info(bar_size_string, bar_data):
+    bar_name = bar_data['Name']
+    seats_count = bar_data['SeatsCount']
+    address = bar_data['Address']
     print("Самый %s бар называется '%s'. Он рассчитан на %s мест и расположен по адресу: %s." %
           (bar_size_string, bar_name, seats_count, address))
 
@@ -41,16 +44,16 @@ def main():
     json_bar_data = load_data('pubs.json')
     
     biggest_bar = get_biggest_bar(json_bar_data)
-    print_bar_info('большой', biggest_bar['Name'], biggest_bar['SeatsCount'], biggest_bar['Address'])
+    print_bar_info('большой', biggest_bar)
     
     smallest_bar = get_smallest_bar(json_bar_data)
-    print_bar_info('маленький', smallest_bar['Name'], smallest_bar['SeatsCount'], smallest_bar['Address'])
+    print_bar_info('маленький', smallest_bar)
     
-    raw_coordinates = input("Введите координаты (скопируйте координаты из яндекс.карт в формате 11.111111, "
-                            "22.222222):\n", )
+    raw_coordinates = input("Введите координаты или скопируйте их из яндекс.карт в формате 11.111111, "
+                            "22.222222:\n> ", )
     coordinates = raw_coordinates.split(',')
-    closest_bar = get_closest_bar(json_bar_data, coordinates[0], coordinates[1])
-    print_bar_info('близкий', closest_bar['Name'], closest_bar['SeatsCount'], closest_bar['Address'])
+    closest_bar = get_closest_bar(json_bar_data, coordinates)
+    print_bar_info('близкий', closest_bar)
 
 
 if __name__ == '__main__':
