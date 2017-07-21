@@ -3,8 +3,8 @@ import math
 import codecs
 
 
-def load_data(file):
-    with open(file, encoding='cp1251') as data:
+def load_data(filepath):
+    with open(filepath, encoding='cp1251') as data:
         string = data.read()
         encoded_string = codecs.encode(string, 'utf-8')
         return json.loads(encoded_string)
