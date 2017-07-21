@@ -4,32 +4,30 @@ import codecs
 
 
 def load_data(file):
-    '''encodes data from cp1251 to utf-8 and load as json'''
     with open(file, encoding='cp1251') as data:
         string = data.read()
         encoded_string = codecs.encode(string, 'utf-8')
         return json.loads(encoded_string)
 
 
-def get_biggest_bar(data):
-    return max([bar for bar in data], key=lambda bar:bar["SeatsCount"])
+def get_biggest_bar(json_data):
+    return max([bar for bar in json_data], key=lambda bar:bar["SeatsCount"])
 
 
-def get_smallest_bar(data):
-    return min([bar for bar in data], key=lambda bar:bar["SeatsCount"])
+def get_smallest_bar(json_data):
+    return min([bar for bar in json_data], key=lambda bar:bar["SeatsCount"])
 
 
 def get_vector_length(x1, y1, x2, y2):
-    '''Calculate distance between two coordinates'''
     x = abs(float(x1) - float(x2))
     y = abs(float(y1) - float(y2))
     length = math.sqrt(x ** 2 + y ** 2)
     return length
 
 
-def get_closest_bar(data, user_coord_x, user_coord_y):
-    return min([bar for bar in data], key=lambda bar:get_vector_length(user_coord_x,
-                                                                       user_coord_y,
+def get_closest_bar(json_data, user_coordinate_x, user_coordinate_y):
+    return min([bar for bar in json_data], key=lambda bar:get_vector_length(user_coordinate_x,
+                                                                       user_coordinate_y,
                                                                        bar['Latitude_WGS84'],
                                                                        bar['Longitude_WGS84']))
 
