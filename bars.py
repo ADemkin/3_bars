@@ -10,34 +10,30 @@ def load_data(file):
         return json.loads(encoded_string)
 
 
-def get_biggest_bar(bar_json_data):
-    return max([bar for bar in bar_json_data], key=lambda bar:bar["SeatsCount"])
+def get_biggest_bar(bar_data):
+    return max([bar for bar in bar_data], key=lambda bar:bar["SeatsCount"])
 
 
-def get_smallest_bar(bar_json_data):
-    return min([bar for bar in bar_json_data], key=lambda bar:bar["SeatsCount"])
+def get_smallest_bar(bar_data):
+    return min([bar for bar in bar_data], key=lambda bar:bar["SeatsCount"])
 
 
 def get_vector_length(x1, y1, x2, y2):
     x = abs(float(x1) - float(x2))
     y = abs(float(y1) - float(y2))
-    length = math.sqrt(x ** 2 + y ** 2)
-    return length
+    return math.sqrt(x ** 2 + y ** 2)
 
 
-def get_closest_bar(bar_json_data, user_coordinate):
-    return min([bar for bar in bar_json_data], key=lambda bar:get_vector_length(user_coordinate[0],
-                                                                       user_coordinate[1],
-                                                                       bar['Latitude_WGS84'],
-                                                                       bar['Longitude_WGS84']))
+def get_closest_bar(bar_data, user_coordinate):
+    return min([bar for bar in bar_data], key=lambda bar:get_vector_length(user_coordinate[0],
+                                                                           user_coordinate[1],
+                                                                           bar['Latitude_WGS84'],
+                                                                           bar['Longitude_WGS84']))
 
 
-def print_bar_info(bar_size_string, bar_data):
-    bar_name = bar_data['Name']
-    seats_count = bar_data['SeatsCount']
-    address = bar_data['Address']
+def print_bar_info(bar_size_string, bar):
     print("Самый %s бар называется '%s'. Он рассчитан на %s мест и расположен по адресу: %s." %
-          (bar_size_string, bar_name, seats_count, address))
+          (bar_size_string, bar['Name'], bar['SeatsCount'], bar['Address']))
 
 
 def main():
