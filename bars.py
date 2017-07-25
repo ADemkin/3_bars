@@ -40,38 +40,38 @@ def print_bar_info(bar_size_string, bar_data):
 
 
 def get_coordinates():
-    while True:
-        raw_coordinates = input("Введите координаты или скопируйте их из яндекс.карт в формате 11.111111, "
-                                "22.222222:\n> ", )
-        # check if coordinates in format: (digits)(maybe . and digits)(coma space digits)(maybe . and digits)
-        if re.search('\d+\.?\d*\,\s\d+\.?\d*', raw_coordinates) is not None:
-            coordinates = raw_coordinates.split(',')
-            return coordinates
-        else:
-            print('Неверный формат координат. ', end='')
+
+    raw_coordinates = input("Введите координаты или скопируйте их из яндекс.карт в формате 11.111111, "
+                            "22.222222:\n> ", )
+    # check if coordinates in format: (digits)(maybe . and digits)(coma space digits)(maybe . and digits)
+    if re.search('\d+\.?\d*\,\s\d+\.?\d*', raw_coordinates) is not None:
+        coordinates = raw_coordinates.split(',')
+        return coordinates
+    else:
+        print('Неверный формат координат. ', end='')
+        sys.exit()
+        
 
 
 def main():
-    if len(sys.argv) > 1:
+    try:
         filepath = sys.argv[1]
-        
-        if os.path.exists(filepath):
-            json_bar_data = load_data(filepath)
-            
-            biggest_bar = get_biggest_bar(json_bar_data)
-            
-            print_bar_info('большой', biggest_bar)
-            
-            smallest_bar = get_smallest_bar(json_bar_data)
-            print_bar_info('маленький', smallest_bar)
-            
-            coordinates = get_coordinates()
-            closest_bar = get_closest_bar(json_bar_data, coordinates)
-            print_bar_info('близкий', closest_bar)
-        else:
-            print('File %s not found.' % filepath)
-    else:
-        print('Usage: bars.py [file]')
+        json_bar_data = load_data(filepath)
+
+        biggest_bar = get_biggest_bar(json_bar_data)
+
+        print_bar_info('большой', biggest_bar)
+
+        smallest_bar = get_smallest_bar(json_bar_data)
+        print_bar_info('маленький', smallest_bar)
+
+        coordinates = get_coordinates()
+        closest_bar = get_closest_bar(json_bar_data, coordinates)
+        print_bar_info('близкий', closest_bar)
+    except FileNotFoundError as error:
+        print("%s: %s" % (error.strerror, error.filename))
+    except IndexError:
+        print("Usage: bars.py [file]")
 
 
 if __name__ == '__main__':
