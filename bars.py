@@ -49,7 +49,6 @@ def get_coordinates():
         return coordinates
     else:
         print('Неверный формат координат. ', end='')
-        sys.exit()
         
 
 
@@ -58,6 +57,13 @@ def main():
         filepath = sys.argv[1]
         json_bar_data = load_data(filepath)
 
+    except FileNotFoundError as error:
+        print("%s: %s" % (error.strerror, error.filename))
+        
+    except IndexError:
+        print("Usage: bars.py [file]")
+        
+    else:
         biggest_bar = get_biggest_bar(json_bar_data)
 
         print_bar_info('большой', biggest_bar)
@@ -66,13 +72,9 @@ def main():
         print_bar_info('маленький', smallest_bar)
 
         coordinates = get_coordinates()
-        closest_bar = get_closest_bar(json_bar_data, coordinates)
-        print_bar_info('близкий', closest_bar)
-    except FileNotFoundError as error:
-        print("%s: %s" % (error.strerror, error.filename))
-    except IndexError:
-        print("Usage: bars.py [file]")
-
+        if coordinates:
+            closest_bar = get_closest_bar(json_bar_data, coordinates)
+            print_bar_info('близкий', closest_bar)
 
 if __name__ == '__main__':
     main()
