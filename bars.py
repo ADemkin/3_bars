@@ -22,9 +22,9 @@ def get_smallest_bar(bar_data):
 
 
 def get_vector_length(x1, y1, x2, y2):
-    x = abs(float(x1) - float(x2))
-    y = abs(float(y1) - float(y2))
-    return math.sqrt(x**2 + y**2)
+    result_x = abs(float(x1) - float(x2))
+    result_y = abs(float(y1) - float(y2))
+    return math.sqrt(result_x**2 + result_y**2)
 
 
 def get_closest_bar(bar_data, user_coordinate):
